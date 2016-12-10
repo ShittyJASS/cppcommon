@@ -17,7 +17,7 @@ struct File {
 	inline File(
 		_In_ LPCSTR lpFileName,
 		_In_ HANDLE handle
-	) : wantDelete(false), h(handle) {
+	) : h(handle) {
 		
 		const char* name = strrchr(lpFileName, '\\');
 		if (!name) name = lpFileName;
@@ -32,7 +32,7 @@ struct File {
 	inline File(
 		_In_ LPCWSTR lpFileName,
 		_In_ HANDLE  handle
-	) : wantDelete(false), h(handle) {
+	) : h(handle) {
 		
 		const wchar_t* name = wcsrchr(lpFileName, '\\');
 		if (!name) name = lpFileName;
@@ -108,10 +108,6 @@ struct File {
 
 	inline ~File(
 	) {
-		if (wantDelete) {
-			FILE_DISPOSITION_INFO fdi = { TRUE };
-			SetFileInformationByHandle(h, FileDispositionInfo, &fdi, sizeof(FILE_DISPOSITION_INFO));
-		}
 		CloseHandle(h);
 		OutputDebugStringA("asd\n");
 	}
@@ -126,12 +122,6 @@ struct File {
 
 	// =========================
 	// attributes
-
-	inline void setDelete(
-		_In_ BOOL wantDelete
-	) {
-		this->wantDelete = wantDelete;
-	}
 
 	inline DWORD getSize(
 		_In_opt_ LPDWORD lpFileSizeHigh
@@ -335,7 +325,6 @@ private:
 	// =========================
 	// members
 
-	BOOL wantDelete;
 	HANDLE h;
 	std::vector<wchar_t> name;
 
