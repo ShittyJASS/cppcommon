@@ -109,7 +109,6 @@ struct File {
 	inline ~File(
 	) {
 		CloseHandle(h);
-		OutputDebugStringA("asd\n");
 	}
 
 	// =========================
